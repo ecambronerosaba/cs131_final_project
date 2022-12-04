@@ -4,25 +4,30 @@ import pyautogui
 from time import sleep
 
 
+
+
 def press_button(button_name, time_of_button_press):
-    pyautogui.keyDown(button_name)
-    sleep(time_of_button_press)
+    pyautogui.press(button_name)
     pyautogui.keyUp(button_name)
+
+def left_gesture_to_key(finger_count):
+    if finger_count == 5:
+        return 'SPACE'
+    elif finger_count == 0:
+        return 'z'
 
 
 def right_gesture_to_key(finger_count):
-    # if finger_count == 1:
-    #     return 'd'
-    # elif finger_count == 2:
-    #     return 'a'
-    # elif finger_count == 3:
-    #     return 's'
-    # elif finger_count == 4:
-    #     return 'w'
-    # el
-    if finger_count == 5:
-        return 'SPACE'
-
+    if finger_count == 0:
+        return 'z'
+    if finger_count == 1:
+        return 'd'
+    elif finger_count == 2:
+        return 'a'
+    elif finger_count == 3:
+        return 's'
+    elif finger_count == 4:
+        return 'w'
 
 button_name = "d"  # string
 time_of_button_press = 1  # interger
@@ -31,6 +36,8 @@ press_button(button_name, time_of_button_press)
 
 cap = cv2.VideoCapture(0)
 detector = HandDetector(detectionCon=0.8, maxHands=2)
+save_right = None
+save_left = None
 while True:
     # Get image frame
     success, img = cap.read()
@@ -56,14 +63,25 @@ while True:
         fingers2 = detector.fingersUp(hand2)
         fingers1 = detector.fingersUp(hand1)
 
-        if handType1 == 'Right':
-            key = right_gesture_to_key(fingers1.count(1))
+        right_key = right_gesture_to_key(fingers1.count(1)) if handType1 == 'Right' else right_gesture_to_key(fingers2.count(1))
 
-        if handType2 == 'Right':
-            key = right_gesture_to_key(fingers2.count(1))
 
-        if key:
-            press_button(key, 1)
+        left_key = left_gesture_to_key(fingers1.count(1)) if handType1 == 'Left' else left_gesture_to_key(fingers2.count(1))
+
+
+        if right_key:
+            if right_key != 'z':
+                save_right = right_key
+                pyautogui.keyDown(right_key)
+            if save_right and right_key == 'z':
+                pyautogui.keyUp(save_right)
+            
+        if left_key:
+            if left_key != 'z':
+                pyautogui.keyDown(left_key)
+                save_left = left_key
+            if save_left and left_key == 'z':
+                pyautogui.keyUp(save_left)
 
     # Display
     cv2.imshow("Image", img)
