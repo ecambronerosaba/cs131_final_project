@@ -4,11 +4,10 @@ import pyautogui
 from time import sleep
 
 
-
-
 def press_button(button_name, time_of_button_press):
     pyautogui.press(button_name)
     pyautogui.keyUp(button_name)
+
 
 def left_gesture_to_key(finger_count):
     if finger_count == 5:
@@ -28,6 +27,9 @@ def right_gesture_to_key(finger_count):
         return 's'
     elif finger_count == 4:
         return 'w'
+    elif finger_count == 5:
+        return 'p'
+
 
 button_name = "d"  # string
 time_of_button_press = 1  # interger
@@ -63,11 +65,11 @@ while True:
         fingers2 = detector.fingersUp(hand2)
         fingers1 = detector.fingersUp(hand1)
 
-        right_key = right_gesture_to_key(fingers1.count(1)) if handType1 == 'Right' else right_gesture_to_key(fingers2.count(1))
+        right_key = right_gesture_to_key(fingers1.count(
+            1)) if handType1 == 'Right' else right_gesture_to_key(fingers2.count(1))
 
-
-        left_key = left_gesture_to_key(fingers1.count(1)) if handType1 == 'Left' else left_gesture_to_key(fingers2.count(1))
-
+        left_key = left_gesture_to_key(fingers1.count(
+            1)) if handType1 == 'Left' else left_gesture_to_key(fingers2.count(1))
 
         if right_key:
             if right_key != 'z':
@@ -75,7 +77,7 @@ while True:
                 pyautogui.keyDown(right_key)
             if save_right and right_key == 'z':
                 pyautogui.keyUp(save_right)
-            
+
         if left_key:
             if left_key != 'z':
                 pyautogui.keyDown(left_key)
