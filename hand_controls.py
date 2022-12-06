@@ -10,10 +10,10 @@ def press_button(button_name, time_of_button_press):
 
 
 def left_gesture_to_key(finger_count):
-    if finger_count == 5:
-        return 'SPACE'
-    elif finger_count == 0:
+    if finger_count <= 1:
         return 'z'
+    elif finger_count >= 2:
+        return 'SPACE'
 
 
 def right_gesture_to_key(finger_count):
